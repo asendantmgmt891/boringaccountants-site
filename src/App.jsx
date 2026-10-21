@@ -46,10 +46,6 @@ function Layout({ children }) {
         <NavLink to="/contact" className="button button-primary header-cta">Let&apos;s Talk</NavLink>
       </header>
       <main>{children}</main>
-      <footer className="site-footer">
-        <a href="http://192.168.0.210:3000" className="button button-secondary crm-link">CRM local</a>
-        <a href="http://100.95.167.39:3000" className="button button-secondary crm-link">CRM tailscale</a>
-      </footer>
     </div>
   )
 }
