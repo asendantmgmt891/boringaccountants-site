@@ -21,6 +21,13 @@ const dashboardMetrics = [
   { label: 'Cash Flow Visible', value: 'Healthy', tone: 'good' },
 ]
 
+function formatPhone(value) {
+  const digits = value.replace(/\D/g, '').slice(0, 10)
+  if (digits.length <= 3) return digits
+  if (digits.length <= 6) return `${digits.slice(0, 3)}-${digits.slice(3)}`
+  return `${digits.slice(0, 3)}-${digits.slice(3, 6)}-${digits.slice(6)}`
+}
+
 function Layout({ children }) {
   return (
     <div className="site-shell">
@@ -281,11 +288,15 @@ function ContactPage() {
         </label>
         <label>
           <span>Phone <span aria-hidden="true">*</span></span>
-          <input name="phone" type="tel" placeholder="5551234567" autoComplete="tel" inputMode="numeric" pattern="[0-9]{10}" minLength="10" maxLength="10" title="Enter a 10-digit phone number." required />
+          <input name="phone" type="tel" placeholder="000-000-0000" autoComplete="tel" inputMode="numeric" pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}" minLength="12" maxLength="12" title="Enter a phone number as 000-000-0000." onChange={(event) => { event.currentTarget.value = formatPhone(event.currentTarget.value) }} required />
         </label>
         <label>
-          Business / Role
-          <input name="business" type="text" placeholder="Business name or role" />
+          Business Name
+          <input name="business" type="text" placeholder="Your business name" />
+        </label>
+        <label>
+          Role
+          <input name="role" type="text" placeholder="Your role" />
         </label>
         <label>
           What would you like help with?

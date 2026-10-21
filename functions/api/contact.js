@@ -20,9 +20,10 @@ export async function onRequestPost({ request, env }) {
     email: text(payload.email, 254),
     phone: text(payload.phone, 64),
     business: text(payload.business, 160),
+    role: text(payload.role, 160),
     message: text(payload.message, 4000),
   }
-  if (!/^\d{10}$/.test(lead.phone)) return json({ error: 'Enter a 10-digit phone number.' }, 400)
+  if (!/^\d{3}-\d{3}-\d{4}$/.test(lead.phone)) return json({ error: 'Enter a phone number as 000-000-0000.' }, 400)
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
     return json({ error: 'Contact delivery is not configured yet.' }, 503)
   }
@@ -33,7 +34,7 @@ export async function onRequestPost({ request, env }) {
     headers: { 'content-type': 'application/json' },
     body: JSON.stringify({
       chat_id: env.TELEGRAM_CHAT_ID,
-      text: `New website lead — ${site}\n\nName: ${lead.name || 'Not provided'}\nEmail: ${lead.email || 'Not provided'}\nPhone: ${lead.phone}\nBusiness / Role: ${lead.business || 'Not provided'}\n\nMessage:\n${lead.message || 'Not provided'}`,
+      text: `New website lead — ${site}\n\nName: ${lead.name || 'Not provided'}\nEmail: ${lead.email || 'Not provided'}\nPhone: ${lead.phone}\nBusiness Name: ${lead.business || 'Not provided'}\nRole: ${lead.role || 'Not provided'}\n\nMessage:\n${lead.message || 'Not provided'}`,
     }),
   })
   const delivery = await telegram.json().catch(() => null)
