@@ -22,7 +22,7 @@ export async function onRequestPost({ request, env }) {
     business: text(payload.business, 160),
     message: text(payload.message, 4000),
   }
-  if (!lead.phone) return json({ error: 'A phone number is required.' }, 400)
+  if (!/^\d{10}$/.test(lead.phone)) return json({ error: 'Enter a 10-digit phone number.' }, 400)
   if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) {
     return json({ error: 'Contact delivery is not configured yet.' }, 503)
   }
@@ -36,6 +36,7 @@ export async function onRequestPost({ request, env }) {
       text: `New website lead — ${site}\n\nName: ${lead.name || 'Not provided'}\nEmail: ${lead.email || 'Not provided'}\nPhone: ${lead.phone}\nBusiness / Role: ${lead.business || 'Not provided'}\n\nMessage:\n${lead.message || 'Not provided'}`,
     }),
   })
-  if (!telegram.ok) return json({ error: 'Unable to deliver your message right now.' }, 502)
+  const delivery = await telegram.json().catch(() => null)
+  if (!telegram.ok || !delivery?.ok) return json({ error: 'Unable to deliver your message right now.' }, 502)
   return json({ ok: true })
 }
