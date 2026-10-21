@@ -5,6 +5,7 @@ const navItems = [
   { to: '/', label: 'Accounting', end: true },
   { to: '/taxes', label: 'Taxes' },
   { to: '/services', label: 'Services' },
+  { to: '/links', label: 'Links' },
   { to: '/contact', label: 'Contact' },
 ]
 
@@ -249,6 +250,68 @@ function ServicesPage() {
   )
 }
 
+const resourceGroups = [
+  { title: 'Accounting', description: 'Xero tools, training, and help when you need it.', tone: 'teal', links: [
+    { label: 'Xero', href: 'https://login.xero.com/identity/user/login' },
+    { label: 'Xero System Status', href: 'https://status.xero.com/' },
+    { label: 'Xero Bank Feed Status', href: 'https://central.xero.com/0/article/Disruptions-to-bank-feeds#UnitedStates' },
+    { label: 'Xero Training Center', href: 'https://central.xero.com/0/learning' },
+    { label: 'Xero Security', href: 'https://www.xero.com/us/security/' },
+    { label: 'Help With Xero', to: '/contact' },
+    { label: 'Help With QuickBooks', to: '/contact' },
+  ] },
+  { title: 'Payroll', description: 'Payroll access and required workplace resources.', tone: 'blue', links: [
+    { label: 'Payroll Dashboard', href: 'https://login.accountantsoffice.com/login?firmCode=Asendant&returnurl=https://www.accountantsoffice.com/aocommon/account/login' },
+    { label: 'Federal Employer Posters', href: 'https://www.dol.gov/general/topics/posters' },
+    { label: 'State Tax Posters', href: 'https://www.hr.uillinois.edu/policy/state_federal_mandates/required_employment_notices_and__posters/posters_other' },
+    { label: 'Help With Payroll', to: '/contact' },
+  ] },
+  { title: 'IRS', description: 'Direct links for federal refund and payment questions.', tone: 'violet', links: [
+    { label: 'Federal Refund Status', href: 'https://www.irs.gov/refunds' },
+    { label: 'Federal Tax Payment Options', href: 'https://www.irs.gov/payments/direct-pay-with-bank-account' },
+    { label: 'Help With Your Taxes', to: '/contact' },
+  ] },
+  { title: 'Maryland', description: 'Maryland tax status, payments, and account access.', tone: 'gold', links: [
+    { label: 'Maryland Refund Status', href: 'https://mdtaxconnect.gov/rptp/portal/individual/wheresMyrefund/' },
+    { label: 'Maryland Tax Payment Options', href: 'https://interactive.marylandtaxes.gov/Individuals/Payment/' },
+    { label: 'Maryland Tax Connect', href: 'https://mdtaxconnect.gov/rptp/portal/home/' },
+  ] },
+]
+
+function LinksPage() {
+  return (
+    <section className="links-page">
+      <div className="links-hero">
+        <div><h1>Links</h1></div>
+        <a className="portal-card" href="https://accountency.securefilepro.com/portal/#/login" target="_blank" rel="noreferrer">
+          <span className="portal-card-kicker">Secure access</span>
+          <strong>Client Portal</strong>
+          <span>Sign in to securely share and access your documents <b aria-hidden="true">↗</b></span>
+        </a>
+      </div>
+      <div className="resource-grid">
+        {resourceGroups.map((group) => (
+          <article className={`resource-card resource-card-${group.tone}`} key={group.title}>
+            <div className="resource-card-head">
+              <span className="resource-card-number">{group.title.slice(0, 1)}</span>
+              <div><h2>{group.title}</h2><p>{group.description}</p></div>
+            </div>
+            <ul className="resource-list">
+              {group.links.map((link) => (
+                <li key={link.label}>{link.to ? (
+                  <NavLink className="resource-link resource-link-internal" to={link.to}><span>{link.label}</span><b aria-hidden="true">→</b></NavLink>
+                ) : (
+                  <a className="resource-link" href={link.href} target="_blank" rel="noreferrer"><span>{link.label}</span><b aria-hidden="true">↗</b></a>
+                )}</li>
+              ))}
+            </ul>
+          </article>
+        ))}
+      </div>
+    </section>
+  )
+}
+
 function ContactPage() {
   const [status, setStatus] = useState({ tone: '', message: '' })
 
@@ -318,6 +381,7 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/taxes" element={<TaxesPage />} />
           <Route path="/services" element={<ServicesPage />} />
+          <Route path="/links" element={<LinksPage />} />
           <Route path="/contact" element={<ContactPage />} />
         </Routes>
       </Layout>
