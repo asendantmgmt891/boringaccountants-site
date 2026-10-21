@@ -208,6 +208,11 @@ textarea {
   text-align: center;
 }
 
+.page-hero.narrow .hero-copy {
+  margin-left: auto;
+  margin-right: auto;
+}
+
 .pill,
 .status-badge,
 .metric-pill,
