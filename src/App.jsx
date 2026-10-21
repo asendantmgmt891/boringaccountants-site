@@ -1,3 +1,4 @@
+import { useState } from 'react'
 import { BrowserRouter, NavLink, Route, Routes } from 'react-router-dom'
 
 const navItems = [
@@ -242,29 +243,57 @@ function ServicesPage() {
 }
 
 function ContactPage() {
+  const [status, setStatus] = useState({ tone: '', message: '' })
+
+  async function handleSubmit(event) {
+    event.preventDefault()
+    const form = event.currentTarget
+    setStatus({ tone: '', message: 'Sending…' })
+
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(Object.fromEntries(new FormData(form))),
+      })
+      const body = await response.json().catch(() => ({}))
+      if (!response.ok) throw new Error(body.error || 'Unable to send your message right now.')
+      form.reset()
+      setStatus({ tone: 'success', message: 'Thanks — we’ll be in touch shortly.' })
+    } catch (error) {
+      setStatus({ tone: 'error', message: error.message || 'Unable to send your message right now.' })
+    }
+  }
+
   return (
     <section className="page-hero narrow">
       <div className="pill accent">Contact</div>
       <h1>Let&apos;s start with a simple conversation.</h1>
       <p className="hero-copy">Tell us a little about your business, your current setup, or what feels messy right now. We&apos;ll keep it easy.</p>
-      <form className="contact-card">
+      <form className="contact-card" onSubmit={handleSubmit}>
         <label>
           Name
-          <input type="text" placeholder="Your name" />
+          <input name="name" type="text" placeholder="Your name" />
         </label>
         <label>
           Email
-          <input type="email" placeholder="you@business.com" />
+          <input name="email" type="email" placeholder="you@business.com" />
+        </label>
+        <label>
+          Phone <span aria-hidden="true">*</span>
+          <input name="phone" type="tel" placeholder="Your phone number" autoComplete="tel" required />
         </label>
         <label>
           Business / Role
-          <input type="text" placeholder="Business name or role" />
+          <input name="business" type="text" placeholder="Business name or role" />
         </label>
         <label>
           What would you like help with?
-          <textarea rows="5" placeholder="A quick note is perfect" />
+          <textarea name="message" rows="5" placeholder="A quick note is perfect" />
         </label>
-        <button type="button" className="button button-primary">Let&apos;s Talk</button>
+        <input name="website" tabIndex="-1" autoComplete="off" aria-hidden="true" style={{ position: 'absolute', left: '-9999px' }} />
+        <button type="submit" className="button button-primary" disabled={status.message === 'Sending…'}>Let&apos;s Talk</button>
+        {status.message ? <p role="status" aria-live="polite">{status.message}</p> : null}
       </form>
     </section>
   )
