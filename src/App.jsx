@@ -34,7 +34,7 @@ function Layout({ children }) {
     <div className="site-shell">
       <header className="site-header">
         <NavLink to="/" className="brand-mark" aria-label="Boring Accountants home">
-          <img src="/images/boring-accountants-people-header.png" alt="Boring Accountants illustration" />
+          <img src="/images/boring-accountants-people-header-transparent.png" alt="Boring Accountants illustration" />
         </NavLink>
         <NavLink to="/" className="brand-copy" aria-label="Boring Accountants home">
           <span>Boring Accountants</span>
